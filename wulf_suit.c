@@ -39,10 +39,10 @@
 #define BRIGHT_SWITCH_PIN 11
 
 enum modes{
-    EPO_ACTIVE,
+    EPO_ACTIVE, 
     EPO_DEBOUNCE,
     LEAVING_EPO,
-    RED,
+    RED, // have all special cases before red
     YELLOW,
     GREEN,
     TEAL,
@@ -50,7 +50,7 @@ enum modes{
     PURPLE,
     WARM_WHITE,
     COOL_WHITE,
-    WHITE
+    WHITE // This must be the last enum for the rest of the code to work
 };
 
 static inline void put_pixel(uint32_t pixel_grb) {
