@@ -48,6 +48,8 @@ enum modes{
     TEAL,
     BLUE,
     PURPLE,
+    WARM_WHITE,
+    COOL_WHITE,
     WHITE
 };
 
@@ -98,6 +100,12 @@ void setColor(uint mode, uint32_t brightness){
         break;
     case PURPLE:
         newColor = urgb_u32(brightness,0,brightness);
+        break;
+    case WARM_WHITE:
+        newColor = urgb_u32(brightness,brightness*.7,brightness*.7);
+        break;
+    case COOL_WHITE:
+        newColor = urgb_u32(brightness*.7,brightness,brightness);
         break;
     case WHITE:
         newColor = urgb_u32(brightness,brightness,brightness);

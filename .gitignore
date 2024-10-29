@@ -1,0 +1,4 @@
+build
+generated
+.*
+pico_sdk_import.cmake
