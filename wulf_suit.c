@@ -43,15 +43,16 @@ enum modes{
     EPO_DEBOUNCE,
     LEAVING_EPO,
     RED, // have all special cases before red
-    YELLOW,
-    GREEN,
     TEAL,
-    BLUE,
     PURPLE,
     WARM_WHITE,
     COOL_WHITE,
+    RAINBOW,
     WHITE // This must be the last enum for the rest of the code to work
 };
+
+uint32_t rainbowCount = 0;
+
 
 static inline void put_pixel(uint32_t pixel_grb) {
     pio_sm_put_blocking(pio0, 0, pixel_grb << 8u);
@@ -62,6 +63,23 @@ static inline uint32_t urgb_u32(uint8_t r, uint8_t g, uint8_t b) {
             ((uint32_t) (r) << 8) |
             ((uint32_t) (g) << 16) |
             (uint32_t) (b);
+}
+
+uint32_t intToRainbow(uint32_t index){
+    index = index % 1536;
+    if(index<256){
+        return urgb_u32(index     , 255       , 0);
+    } else if (index < 512){
+        return urgb_u32(255       , 511-index , 0);
+    } else if (index < 768){
+        return urgb_u32(255       , 0         , index - 512);
+    } else if (index < 1024){
+        return urgb_u32(1023-index, 0         , 255);
+    } else if (index < 1280){  
+        return urgb_u32(0         , index-1024, 255);
+    } else {
+        return urgb_u32(0         , 255       , 1535 - index);
+    }
 }
 
 void pattern_black(uint len){
@@ -86,18 +104,18 @@ void setColor(uint mode, uint32_t brightness){
     case RED:
         newColor = urgb_u32(brightness,0,0);
         break;
-    case YELLOW:
-        newColor = urgb_u32(brightness,brightness,0);
-        break;
-    case GREEN:
-        newColor = urgb_u32(0,brightness,0);
-        break;
+    //case YELLOW:
+    //    newColor = urgb_u32(brightness,brightness,0);
+    //    break;
+    //case GREEN:
+    //    newColor = urgb_u32(0,brightness,0);
+    //    break;
     case TEAL:
         newColor = urgb_u32(0,brightness,brightness);
         break;
-    case BLUE:
-        newColor = urgb_u32(0,0,brightness);
-        break;
+    //case BLUE:
+    //    newColor = urgb_u32(0,0,brightness);
+    //    break;
     case PURPLE:
         newColor = urgb_u32(brightness,0,brightness);
         break;
@@ -110,6 +128,10 @@ void setColor(uint mode, uint32_t brightness){
     case WHITE:
         newColor = urgb_u32(brightness,brightness,brightness);
         break;    
+    case RAINBOW:
+        newColor = intToRainbow(rainbowCount);
+        rainbowCount = (rainbowCount+3);
+        break;
     case LEAVING_EPO:
         newColor = urgb_u32(30,30,30);
         break;
@@ -138,7 +160,7 @@ int main() {
     int mode_count = 0;
     int bright_count = 0;
     int both_count = 0;
-    uint32_t mode =  WHITE;
+    uint32_t mode =  RAINBOW;
     int brightness = 20;
     uint offset = pio_add_program(pio, &ws2812_program);
 
@@ -186,7 +208,7 @@ int main() {
             printf("BRIGHT!\n");
             both_count = 0;
             brightness++;
-            if(brightness>255){
+            if(brightness>255*3){
                 brightness = 1;
             }
         } else {
@@ -201,7 +223,7 @@ int main() {
                 mode = RED;
             }
         }
-        setColor(mode,brightness);
+        setColor(mode,brightness/3);
         sleep_ms(10);
     }
 }
