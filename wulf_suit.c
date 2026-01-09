@@ -160,8 +160,8 @@ int main() {
     int mode_count = 0;
     int bright_count = 0;
     int both_count = 0;
-    uint32_t mode =  RAINBOW;
-    int brightness = 20;
+    uint32_t mode =  PURPLE;
+    int brightness = 1;
     uint offset = pio_add_program(pio, &ws2812_program);
 
     ws2812_program_init(pio, sm, offset, WS2812_PIN, 800000, IS_RGBW);
