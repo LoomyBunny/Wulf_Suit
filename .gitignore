@@ -1,4 +1,18 @@
-build
-generated
-.*
-pico_sdk_import.cmake
+# Git ignore build artifacts
+build/
+generated/
+*.uf2
+*.elf
+*.bin
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json*
+pico_flash_region.ld
+
+# Keep only essential files for Pico SDK
+!CMakeLists.txt
+!wulf_suit.c
+!ws2812.pio
+!Makefile
+!pico_sdk_import.cmake
